@@ -45,9 +45,9 @@ struct pair indexes[26];
 int checkpalindromic(char *s) {
 	char *reversed  = str_reverse(s);
 	for(int i=0;i<ds;i++){
-		printf("%s\n",reversed);
+		//printf("%s\n",reversed);
 		if(strcmp(reversed,dict[i]) == 0){
-			printf("%s %s\n",dict[i],reversed); //this one
+			//printf("%s %s\n",dict[i],reversed); //this one
 			return 1;
 		}
 	}
@@ -59,6 +59,7 @@ void* check(void * args) {
 	char *fl = (char*)args;
 	char x = tolower(*fl);
 	for(int i=0;i<ds;i++){
+		//printf("%s ",dict[i]);
 		char first_char = tolower(dict[i][0]);
 		if(x == first_char){
 			if(checkpalindromic(dict[i])){
