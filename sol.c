@@ -4,9 +4,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
-#define ss 40	//size of single word
-//#define ds 99171 //words
-#define ds 3
+#define ss 45	//size of single word
+#define ds 5//words
+//#define ds 3
 //99,171
 int res =0; // total no of palindromix words
 char dict[ds][ss];
@@ -43,10 +43,11 @@ struct pair indexes[26];
 
 //5794
 int checkpalindromic(char *s) {
-	s = str_reverse(s);
+	char *reversed  = str_reverse(s);
 	for(int i=0;i<ds;i++){
-		if(strcmp(s,dict[i]) == 0){
-			//printf("%s %s %d\n",dict[i],s,res); //this one
+		printf("%s\n",reversed);
+		if(strcmp(reversed,dict[i]) == 0){
+			printf("%s %s\n",dict[i],reversed); //this one
 			return 1;
 		}
 	}
@@ -54,8 +55,9 @@ int checkpalindromic(char *s) {
 }
 
 
-void check(char x) {
-	x = tolower(x);
+void* check(void * args) {
+	char *fl = (char*)args;
+	char x = tolower(*fl);
 	for(int i=0;i<ds;i++){
 		char first_char = tolower(dict[i][0]);
 		if(x == first_char){
@@ -63,14 +65,14 @@ void check(char x) {
 				res++;
 			}
 		} else {
-			indexes[x-'a'].end = i-1;  
-		}	
-	}	
+			indexes[x-'a'].end = i-1;
+		}
+	}
 }
-
+          
 void init() {
 	freopen("words.txt","r",stdin);
-	char str[40];
+	char str[ss];
 	for(int i=0;i<ds;i++){
 		scanf("%s",str);
 		strcpy(dict[i],str);
@@ -81,10 +83,11 @@ int main() {
 	freopen("output.txt","w",stdout);
 	char alpha = 'a';
 	init();
-	for(int i=0;i<1;i++) {
+	pthread_t newthread;
+	for(int i=0;i<26;i++) {
 		//printf("%c",alpha);
 		indexes[i].start = i;
-		check(alpha);
+		pthread_create(&newthread,NULL,check,&alpha);
 		 alpha++;
 	}
 	printf("%d",res);
